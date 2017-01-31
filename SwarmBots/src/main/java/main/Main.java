@@ -11,6 +11,7 @@ public final class Main {
 	public static SwarmCode sc;
 	public static BotFactory bf;
 	public final static void main(String[] args) {
+		bf=new BotFactory("Fabryka 1");
 		sc=new SwarmCode(
 		new String[]{
 				"/*",
@@ -21,9 +22,8 @@ public final class Main {
 				"Jeœli LPM wybierzesz robota,",
 				"to informacje o nim dostaniesz na panelu \"Bot\"",
 				"*/"
-		});
+		},bf);
 		SwarmCode.ColMap=new CollisionPlane();
-		bf=new BotFactory("Fabryka 1");
 		bf.Code=sc;
 		EventQueue.invokeLater(new Runnable() {
 			@Override

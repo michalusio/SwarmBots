@@ -238,8 +238,17 @@ public final class Parser {
 			public Object result(Object left, Object right) {
 				if (left instanceof Vector2D)
 					return ((Double)right).intValue()==0?((Vector2D)left).X:((Vector2D)left).Y;
+				if (left instanceof Pair<?,?>)
+					return ((Double)right).intValue()==0?((Pair<Object,Object>)left).obj1:((Pair<Object,Object>)left).obj2;
 				if (left instanceof String)
 					return String.valueOf(((String)left).charAt(((Double)right).intValue()));
+				if (left instanceof Queue){
+					Queue<Object> q=(Queue<Object>)left;
+					int howMuch=Math.min(q.size(),(int)(double)right);
+					List<Object> a=new ArrayList<Object>(howMuch);
+					for(int i=0;i<howMuch;++i) a.add(q.remove());
+					return a;
+				}
 				return ((List<Object>)left).get(((Double)right).intValue());
 			}
 		});

@@ -103,6 +103,12 @@ public class MainDrawPanel extends JPanel {
         gr.setColor(Color.BLUE);
         if (Bots!=null)
         for(Bot b:Bots.getAllBots()){
+        	//Macierz transformacji bot-œwiat to:
+        	//1. Obrót o k¹t bota
+        	//2. Przesuniêcie ujemne o kamerê
+        	//3. Przesuniêcie o pozycjê bota (po³¹czone z 2.)
+        	//4. Skalowanie o zoom kamery
+        	//5. Przesuniêcie o pó³ ekranu (na wyœrodkowanie)
         	a=AffineTransform.getTranslateInstance(Camera.getHalfSize().X,Camera.getHalfSize().Y);
         	a.concatenate(AffineTransform.getScaleInstance(Camera.getZoom(), Camera.getZoom()));
         	a.concatenate(AffineTransform.getTranslateInstance(b.getPosition().X-Camera.getPosition().X, b.getPosition().Y-Camera.getPosition().Y));
@@ -115,6 +121,7 @@ public class MainDrawPanel extends JPanel {
         		gr.drawRect((int)p1.getX() -w1, (int)p1.getY() -w1, w2, w2);
         		updateBotDescription(gr,false);
         	}
+        	//6. Przesuniêcie ujemne o 32 pixele (wyœrodkowanie obrazka bota)
         	a.concatenate(AffineTransform.getTranslateInstance(-32,-32));
         	gr.drawImage(BotImage, a, null);
         }

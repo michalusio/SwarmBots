@@ -121,7 +121,7 @@ public final class MainWindow extends JFrame {
 					b.Interrupt();
 				}
 				canvas.Bots.Code=null;
-				canvas.Bots.Code=new SwarmCode(newCode);
+				canvas.Bots.Code=new SwarmCode(newCode,canvas.Bots);
 				for(Bot b:canvas.Bots.getAllBots()){
 					b.Restart();
 					b.Start();

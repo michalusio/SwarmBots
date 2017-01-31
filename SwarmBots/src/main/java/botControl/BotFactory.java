@@ -1,10 +1,9 @@
 package botControl;
 
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 import collisions.CollisionShape;
 
@@ -14,14 +13,14 @@ public final class BotFactory {
 	private final String Name;
 	private final LinkedList<Integer> FreeIDs;
 	private int MaxID;
-	private final Set<Bot> Bots;
+	private final List<Bot> Bots;
 
 	public boolean Pause;
 	
 	public BotFactory(String Name){
 		this.Name=Name;
 		FreeIDs=new LinkedList<Integer>();
-		Bots=new HashSet<Bot>();
+		Bots=new ArrayList<Bot>();
 		enlargeIDs(1000);
 	}
 	
@@ -51,7 +50,7 @@ public final class BotFactory {
 		Bots.remove(bot);
 	}
 
-	public Collection<Bot> getAllBots() {
+	public List<Bot> getAllBots() {
 		return Bots;
 	}
 }

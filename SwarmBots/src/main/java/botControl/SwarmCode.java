@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 
 import collisions.CollisionPlane;
@@ -13,13 +14,15 @@ import main.Vector2D;
 import onp.Parser;
 
 public final class SwarmCode {
+	public final BotFactory Factory;
 	public static CollisionPlane ColMap;
 	public final List<String> Commands;
 	public final Map<String,ICommand> CommandMap=new HashMap<String,ICommand>();
 	private final Parser Pars;
 	
-	public SwarmCode(String[] Code){
+	public SwarmCode(String[] Code,BotFactory bf){
 		Init();
+		Factory=bf;
 		Commands=new ArrayList<String>();
 		boolean comment=false;
 		for(int i=0;i<Code.length;i++){
@@ -91,6 +94,20 @@ public final class SwarmCode {
 				return null;
 			}
 			return new ErrorCode("Invalid 'print' statement!");
+		});
+		
+		CommandMap.put("send(", (String args,Map<String, Pair<Object,Boolean>> Memory)->{
+			if (args.endsWith(")")){
+				String[] tab=intelligentSplit(args.substring(0,args.length()-1),",","([",")]");
+				if (tab.length!=2) return new ErrorCode("Invalid 'send' statement!");
+				int ID=(int)((double)Pars.Solve(Pars.Parse(tab[0]), Memory));
+				Object o=Pars.Solve(Pars.Parse(tab[1]), Memory);
+				synchronized(Factory.getAllBots().get(ID).getMemory().get("NetCard").obj1){
+					((Queue<Object>)Factory.getAllBots().get(ID).getMemory().get("NetCard").obj1).add(new Pair<Object,Object>(Memory.get("ID").obj1,o));
+				}
+				return null;
+			}
+			return new ErrorCode("Invalid 'send' statement!");
 		});
 		
 		CommandMap.put("fail(",(String args,Map<String, Pair<Object,Boolean>> Memory) ->{
@@ -347,6 +364,26 @@ public final class SwarmCode {
 			}
 			return new ErrorCode("Block end invalid: "+args);
 		});
+	}
+
+	private String[] intelligentSplit(String string,String split, String levelOpen, String levelClose) {
+		List<String> l=new ArrayList<String>();
+		int level=0;
+		StringBuilder actual=new StringBuilder();
+		for(char c :string.toCharArray()){
+			if (level==0&&split.contains(String.valueOf(c))){
+				l.add(actual.toString());
+				actual=new StringBuilder();
+			} else actual.append(c);
+			if (levelOpen.contains(String.valueOf(c))){
+				level++;
+			}
+			if (levelClose.contains(String.valueOf(c))){
+				level--;
+			}
+		}
+		l.add(actual.toString());
+		return (String[]) l.toArray();
 	}
 
 	private final String FindArrays(String formula) {
