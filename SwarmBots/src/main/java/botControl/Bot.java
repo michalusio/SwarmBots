@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 
 import collisions.AABB;
@@ -51,6 +52,7 @@ public final class Bot {
 		Memory.put("IP",new Pair<Object,Boolean>(0,true));
 		Memory.put("LoopStack", new Pair<Object,Boolean>(new Stack<Object>(),true));
 		Memory.put("Terminal",new Pair<Object,Boolean>(new LinkedList<String>(),true));
+		Memory.put("NetCard", new Pair<Object,Boolean>((Queue<?>)new LinkedList<Pair<Object,Object>>(),true));
 		terminalcount=0;
 		upd=true;
 	}
@@ -116,6 +118,7 @@ public final class Bot {
 							errorCode=Creator.Code.CommandMap.get(commandType).process(command.substring(commandType.length()),Memory);
 						}catch (Exception e){
 							errorCode=new ErrorCode(e.getMessage());
+							System.out.println(e);
 						}
 					}
 				}else{

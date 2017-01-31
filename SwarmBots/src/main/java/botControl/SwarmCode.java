@@ -375,15 +375,12 @@ public final class SwarmCode {
 				l.add(actual.toString());
 				actual=new StringBuilder();
 			} else actual.append(c);
-			if (levelOpen.contains(String.valueOf(c))){
-				level++;
-			}
-			if (levelClose.contains(String.valueOf(c))){
-				level--;
-			}
+			if (levelOpen.contains(String.valueOf(c))) level++;
+			if (levelClose.contains(String.valueOf(c))) level--;
 		}
 		l.add(actual.toString());
-		return (String[]) l.toArray();
+		String[] stockArr = new String[l.size()];
+		return l.toArray(stockArr);
 	}
 
 	private final String FindArrays(String formula) {

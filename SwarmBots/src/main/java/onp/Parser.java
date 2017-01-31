@@ -591,9 +591,12 @@ public final class Parser {
 		Stack<Object> Things=new Stack<Object>();
 		
 		StringBuilder actVar=new StringBuilder(5);
+		boolean cudz=false;
 		for (char c: formula.toCharArray()){
-			
-			if (Character.isLetterOrDigit(c)||c=='['||c==']'||c=='_'||c=='.'||c=='\"'||c==' '||c=='\''||c=='?'||c=='!') actVar.append(c);
+			if (c=='\"') {
+				cudz=!cudz;
+				actVar.append(c);
+			}else if (cudz||Character.isLetterOrDigit(c)||c=='['||c==']'||c=='_'||c=='.'||c==' '||c=='\''||c=='?'||c=='!') actVar.append(c);
 			else if (c==',') {
 				if (actVar.length()>0){
 					String var=actVar.toString();
