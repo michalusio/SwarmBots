@@ -7,11 +7,11 @@ public final class Vector2D {
 	public double X,Y;
 	
 	public Vector2D(){
-		X=Y=0;
+		this(0,0);
 	}
 	
 	public Vector2D(double a){
-		X=Y=a;
+		this(a,a);
 	}
 	
 	public Vector2D(double x,double y){

@@ -29,12 +29,16 @@ public class MainDrawPanel extends JPanel {
 	private final Camera Camera;
 	private Image BotImage;
 	private AffineTransform a;
+	private Vector2D inverted;
+	
 	private GraphicPanel botPanel;
 	private GraphicList botList;
 	private GraphicLabel botLabelWork;
 	private GraphicLabel botLabelID;
 	private GraphicLabel botLabelPos;
 	private GraphicLabel botLabelAngle;
+	
+	private GraphicPanel createPanel;
 	
 	public MainDrawPanel(BotFactory bots){
 		super();
@@ -85,6 +89,20 @@ public class MainDrawPanel extends JPanel {
 	    botPanel.addComponent(new GraphicLabel(new Vector2D(120,25),new Vector2D(32,24),"Angle:",Color.BLACK));
 	    botLabelAngle=new GraphicLabel(new Vector2D(155,25),new Vector2D(48,24),"0",Color.BLACK);
 	    botPanel.addComponent(botLabelAngle);
+	    
+	    
+	    
+	    createPanel=new GraphicPanel(new Vector2D(200,200));
+	    createPanel.Visible=false;
+	    createPanel.Raised=true;
+	    
+	    createPanel.addComponent(new GraphicButton(new Vector2D(20,20),new Vector2D(64,48),"Normal Bot",()->{
+	    	selectedBot=Bots.getNewBot();
+			selectedBot.setPosition(inverted);
+			selectedBot.Start();
+			createPanel.Size=new Vector2D();
+			createPanel.Visible=false;
+	    }));
 	}
 	
     @Override
@@ -128,6 +146,7 @@ public class MainDrawPanel extends JPanel {
         gr.setColor(Color.BLACK);
         gr.drawString("Free memory: " + String.format("%1$.2f",Runtime.getRuntime().freeMemory()/1048576.0d) +"Mb", getWidth()-140,12);
         botPanel.drawComponent(gr);
+        createPanel.drawComponent(gr);
     }
 
     @Override
@@ -145,11 +164,13 @@ public class MainDrawPanel extends JPanel {
 	}
 
 	public void clickMouse(Vector2D mPos,boolean leftButton) throws NoninvertibleTransformException {
-		if (!botPanel.onMouseClick(mPos)){
+		if ((!botPanel.onMouseClick(mPos))&&(!createPanel.onMouseClick(mPos))){
 			AffineTransform invert=AffineTransform.getTranslateInstance(Camera.getPosition().X, Camera.getPosition().Y);
 			invert.concatenate(AffineTransform.getScaleInstance(1/Camera.getZoom(), 1/Camera.getZoom()));
 			invert.concatenate(AffineTransform.getTranslateInstance(-Camera.getHalfSize().X,-Camera.getHalfSize().Y));
-			Vector2D inverted=Vector2D.fromPoint2D(invert.transform(new Point2D.Double(mPos.X,mPos.Y),null));
+			inverted=Vector2D.fromPoint2D(invert.transform(new Point2D.Double(mPos.X,mPos.Y),null));
+			createPanel.Size=new Vector2D();
+			createPanel.Visible=false;
 			if (leftButton){
 				Bot prevSelected=selectedBot;
 				selectedBot=null;
@@ -161,12 +182,12 @@ public class MainDrawPanel extends JPanel {
 						distSqr=d;
 					}
 				}
-				if (selectedBot!=prevSelected) botPanel.Size=new Vector2D(0,0);
+				if (selectedBot!=prevSelected) botPanel.Size=new Vector2D();
 			}else{
-				selectedBot=Bots.getNewBot();
-				selectedBot.setPosition(inverted);
-				selectedBot.Start();
-				botPanel.Size=new Vector2D(0,0);
+				selectedBot=null;
+				createPanel.Position=mPos;
+				createPanel.Visible=true;
+				botPanel.Size=new Vector2D();
 			}
 		}
 		updateBotDescription((Graphics2D) getGraphics(),true);
