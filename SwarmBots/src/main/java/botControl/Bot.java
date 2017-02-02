@@ -13,10 +13,12 @@ import collisions.CollisionShape;
 import collisions.basicShapes.Disc;
 import main.Vector2D;
 
-public final class Bot {
+public abstract class Bot {
+	
+	public final BotType Type;
 	
 	private final BotFactory Creator;	
-	private final int ID;
+	protected final int ID;
 	
 	private final Map<String,Pair<Object,Boolean>> Memory;
 	private ErrorCode errorCode;
@@ -25,7 +27,8 @@ public final class Bot {
 	private int terminalcount;
 	private boolean work,upd;
 	
-	public Bot(int id, BotFactory factory){
+	public Bot(int id, BotFactory factory, BotType Type){
+		this.Type=Type;
 		Creator=factory;
 		ID=id;
 		Memory=new HashMap<String,Pair<Object,Boolean>>();
@@ -34,6 +37,7 @@ public final class Bot {
 		Disc sh=new Disc(new AABB(new Vector2D(0,0),new Vector2D(32,32)));
 		sh.translateTo(new Vector2D(0));
 		Memory.put("Shape", new Pair<Object,Boolean>(sh,true));
+		Memory.put("Static", new Pair<Object,Boolean>(false,true));
 		Restart();
 	}
 	
@@ -41,6 +45,7 @@ public final class Bot {
 		Vector2D Pos=(Vector2D) Memory.get("Position").obj1;
 		double Ang=(Double) Memory.get("Angle").obj1;
 		CollisionShape cs=(CollisionShape) Memory.get("Shape").obj1;
+		boolean stat=(Boolean) Memory.get("Static").obj1;
 		Memory.clear();
 		Memory.put("This", new Pair<Object,Boolean>(this,true));
 		Memory.put("BracketLock", new Pair<Object,Boolean>(0,true));
@@ -53,6 +58,7 @@ public final class Bot {
 		Memory.put("LoopStack", new Pair<Object,Boolean>(new Stack<Object>(),true));
 		Memory.put("Terminal",new Pair<Object,Boolean>(new LinkedList<String>(),true));
 		Memory.put("NetCard", new Pair<Object,Boolean>((Queue<?>)new LinkedList<Pair<Object,Object>>(),true));
+		Memory.put("Static", new Pair<Object,Boolean>(stat,true));
 		terminalcount=0;
 		upd=true;
 	}

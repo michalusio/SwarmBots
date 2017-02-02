@@ -35,9 +35,19 @@ public final class BotFactory {
 		MaxID+=howMuch;
 	}
 	
-	public final Bot getNewBot(){
+	public final Bot getNewBot(BotType Type){
 		if (FreeIDs.isEmpty()) enlargeIDs(1000);
-		Bot b=new Bot(FreeIDs.removeLast(),this);
+		Bot b;
+		switch(Type){
+		case Basic:
+			b=new BasicBot(FreeIDs.removeLast(),this);
+			break;
+		case Station:
+			b=new StationBot(FreeIDs.removeLast(),this);
+			break;
+		default:
+			return null;
+		}
 		Bots.add(b);
 		if (SwarmCode.ColMap!=null){
 			SwarmCode.ColMap.addCollisionShape((CollisionShape) b.getMemory().get("Shape").obj1);

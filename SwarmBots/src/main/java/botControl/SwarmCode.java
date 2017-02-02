@@ -116,6 +116,7 @@ public final class SwarmCode {
 		});
 		
 		CommandMap.put("turnto(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
+			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
@@ -135,6 +136,7 @@ public final class SwarmCode {
 		});
 		
 		CommandMap.put("turnleft(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
+			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
@@ -149,6 +151,7 @@ public final class SwarmCode {
 		});
 		
 		CommandMap.put("turnright(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
+			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
@@ -163,6 +166,7 @@ public final class SwarmCode {
 		});
 		
 		CommandMap.put("forward(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
+			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
@@ -225,6 +229,7 @@ public final class SwarmCode {
 		});
 		
 		CommandMap.put("backward(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
+			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){

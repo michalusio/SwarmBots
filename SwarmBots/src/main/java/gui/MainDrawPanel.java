@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import botControl.Bot;
 import botControl.BotFactory;
+import botControl.BotType;
 import main.Main;
 import main.Vector2D;
 
@@ -27,7 +28,7 @@ public class MainDrawPanel extends JPanel {
 	public final BotFactory Bots;
 	public Bot selectedBot=null;
 	private final Camera Camera;
-	private Image BotImage;
+	private Image BotImage,StationImage;
 	private AffineTransform a;
 	private Vector2D inverted;
 	
@@ -44,6 +45,7 @@ public class MainDrawPanel extends JPanel {
 		super();
 		Camera=new Camera(new Vector2D(0,0),new Vector2D(getWidth(),getHeight()),1);
 		Bots=bots;
+		
 	    URL url = Main.class.getClassLoader().getResource("main/bot.png");
 	    System.out.println("Loading bot image: "+url.getPath());
 	    try {
@@ -52,6 +54,15 @@ public class MainDrawPanel extends JPanel {
 			BotImage=null;
 			e.printStackTrace();
 		}
+	    url = Main.class.getClassLoader().getResource("main/station.png");
+	    System.out.println("Loading station image: "+url.getPath());
+	    try {
+			StationImage = ImageIO.read(url);
+		} catch (IOException e) {
+			StationImage=null;
+			e.printStackTrace();
+		}
+	    
 	    botPanel=new GraphicPanel(new Vector2D(300,300));
 	    botPanel.Visible=false;
 	    botPanel.Raised=true;
@@ -97,7 +108,14 @@ public class MainDrawPanel extends JPanel {
 	    createPanel.Raised=true;
 	    
 	    createPanel.addComponent(new GraphicButton(new Vector2D(20,20),new Vector2D(64,48),"Normal Bot",()->{
-	    	selectedBot=Bots.getNewBot();
+	    	selectedBot=Bots.getNewBot(BotType.Basic);
+			selectedBot.setPosition(inverted);
+			selectedBot.Start();
+			createPanel.Size=new Vector2D();
+			createPanel.Visible=false;
+	    }));
+	    createPanel.addComponent(new GraphicButton(new Vector2D(94,20),new Vector2D(64,48),"Bot Station",()->{
+	    	selectedBot=Bots.getNewBot(BotType.Station);
 			selectedBot.setPosition(inverted);
 			selectedBot.Start();
 			createPanel.Size=new Vector2D();
@@ -141,7 +159,18 @@ public class MainDrawPanel extends JPanel {
         	}
         	//6. Przesuniêcie ujemne o 32 pixele (wyœrodkowanie obrazka bota)
         	a.concatenate(AffineTransform.getTranslateInstance(-32,-32));
-        	gr.drawImage(BotImage, a, null);
+        	Image Img;
+        	switch(b.Type){
+			case Basic:
+				Img=BotImage;
+				break;
+			case Station:
+				Img=StationImage;
+				break;
+			default:
+				continue;
+        	}
+        	gr.drawImage(Img, a, null);
         }
         gr.setColor(Color.BLACK);
         gr.drawString("Free memory: " + String.format("%1$.2f",Runtime.getRuntime().freeMemory()/1048576.0d) +"Mb", getWidth()-140,12);
