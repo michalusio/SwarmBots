@@ -57,7 +57,8 @@ public final class SwarmCode {
 				left=FindArrays(left);
 				right=FindArrays(right);
 				int i=left.indexOf('@');
-				Object solve=Pars.Solve(Pars.Parse(right), Memory);
+				String r=FindArrays(right);
+				Object solve=Pars.Solve(Pars.Parse(r), Memory);
 				if (i>=0){
 					int index=((Double)Pars.Solve(Pars.Parse(left.substring(i+1)), Memory)).intValue();
 					String varName=left.substring(0,i);
@@ -100,8 +101,8 @@ public final class SwarmCode {
 			if (args.endsWith(")")){
 				String[] tab=intelligentSplit(args.substring(0,args.length()-1),",","([",")]");
 				if (tab.length!=2) return new ErrorCode("Invalid 'send' statement!");
-				int ID=(int)((double)Pars.Solve(Pars.Parse(tab[0]), Memory));
-				Object o=Pars.Solve(Pars.Parse(tab[1]), Memory);
+				int ID=(int)((double)Pars.Solve(Pars.Parse(FindArrays(tab[0])), Memory));
+				Object o=Pars.Solve(Pars.Parse(FindArrays(tab[1])), Memory);
 				synchronized(Factory.getAllBots().get(ID).getMemory().get("NetCard").obj1){
 					((Queue<Object>)Factory.getAllBots().get(ID).getMemory().get("NetCard").obj1).add(new Pair<Object,Object>(Memory.get("ID").obj1,o));
 				}
@@ -319,7 +320,7 @@ public final class SwarmCode {
 		
 		CommandMap.put("while(",(String args,Map<String, Pair<Object,Boolean>> Memory) ->{
 			if (args.matches(".+\\)\\{")){
-				Object solve=Pars.Solve(Pars.Parse(args.substring(0,args.length()-2)), Memory);
+				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-2))), Memory);
 				Stack<Object> o=(Stack<Object>) Memory.get("LoopStack").obj1;
 				if (solve instanceof Double && ((Double)solve)>0.5){
 					o.push(((Integer)Memory.get("IP").obj1) -1);
@@ -336,7 +337,7 @@ public final class SwarmCode {
 		
 		CommandMap.put("if(",(String args,Map<String, Pair<Object,Boolean>> Memory) ->{
 			if (args.matches(".+\\)\\{")){
-				Object solve=Pars.Solve(Pars.Parse(args.substring(0,args.length()-2)), Memory);
+				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-2))), Memory);
 				if (!(solve instanceof Double && ((Double)solve)>0.5)) {
 					Memory.put("BracketLock", new Pair<Object,Boolean>(1,true));
 				}else {

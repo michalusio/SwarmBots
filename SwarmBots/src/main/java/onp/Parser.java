@@ -264,13 +264,13 @@ public final class Parser {
 				if (left instanceof Queue){
 					Queue<Object> q=(Queue<Object>)left;
 					int howMuch=Math.min(q.size(),(int)(double)right);
-					List<Object> a=new ArrayList<Object>(howMuch);
+					List<Object> a=new ArrayList<Object>();
 					for(int i=0;i<howMuch;++i) a.add(q.remove());
 					return a;
 				}
 				try{
 					return ((List<Object>)left).get(((Double)right).intValue());
-				}catch(ArrayIndexOutOfBoundsException e){
+				}catch(IndexOutOfBoundsException e){
 					return null;
 				}
 			}
@@ -548,7 +548,7 @@ public final class Parser {
 						dist=d;
 					}
 				}
-				return near;
+				return new Pair<Bot, Double>(near,dist);
 			}
 		});
 	}
@@ -586,8 +586,8 @@ public final class Parser {
 				try{
 					Calculations.push(Double.parseDouble(s));
 				} catch(Exception e) {
-					if (s=="null") Calculations.push(null);
-					if (Variables.containsKey(s)) Calculations.push(Variables.get(s).obj1);
+					if (s.equalsIgnoreCase("null")) Calculations.push(null);
+					else if (Variables.containsKey(s)) Calculations.push(Variables.get(s).obj1);
 					else if (s.charAt(0)=='\"'&&s.charAt(s.length()-1)=='\"') Calculations.push(s.substring(1, s.length()-1));
 					else throw new IllegalArgumentException("Invalid variable: "+s);
 				}

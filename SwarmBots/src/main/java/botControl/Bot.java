@@ -131,8 +131,7 @@ public abstract class Bot {
 					if (command.equals("}")) {
 						lock=Math.max(0,lock-1);
 						Memory.put("BracketLock", new Pair<Object,Boolean>(lock,true));
-					}else
-					if (command.equals("}else{")) {
+					}else if (command.equals("}else{")) {
 						lock=Math.max(0,lock-1);
 						Memory.put("BracketLock", new Pair<Object,Boolean>(lock,true));
 						if (lock==0){
@@ -140,10 +139,9 @@ public abstract class Bot {
 							o.push(((Integer)Memory.get("IP").obj1) -1);
 							o.push(0);
 						}
-					}else
-					if (command.endsWith("{")) {
+					}else if (command.endsWith("{")) {
 						lock++;
-						Memory.put("BracketLock", new Pair<Object,Boolean>(lock+1,true));
+						Memory.put("BracketLock", new Pair<Object,Boolean>(lock,true));
 					}
 				}
 			}
