@@ -148,7 +148,7 @@ public class MainDrawPanel extends JPanel {
         	a=AffineTransform.getTranslateInstance(Camera.getHalfSize().X,Camera.getHalfSize().Y);
         	a.concatenate(AffineTransform.getScaleInstance(Camera.getZoom(), Camera.getZoom()));
         	a.concatenate(AffineTransform.getTranslateInstance(b.getPosition().X-Camera.getPosition().X, b.getPosition().Y-Camera.getPosition().Y));
-        	a.concatenate(AffineTransform.getRotateInstance(b.getAngle()));
+        	a.concatenate(AffineTransform.getRotateInstance(-b.getAngle()));
         	if (b==selectedBot){
         		Point2D p1=a.transform(new Point2D.Double(),null);
         		botPanel.Position=new Vector2D(p1.getX(),p1.getY()-botPanel.MaxSize.Y);

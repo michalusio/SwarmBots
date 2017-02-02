@@ -9,6 +9,8 @@ import collisions.CollisionShape;
 
 public final class BotFactory {
 	public SwarmCode Code;
+	public int BotMoveDelay=20;
+	public int BotRotateDelay=10;
 	
 	private final String Name;
 	private final LinkedList<Integer> FreeIDs;

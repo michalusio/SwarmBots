@@ -10,6 +10,7 @@ import java.util.Stack;
 
 import collisions.CollisionPlane;
 import collisions.CollisionShape;
+import main.MathUtil;
 import main.Vector2D;
 import onp.Parser;
 
@@ -120,18 +121,28 @@ public final class SwarmCode {
 			if (Memory.get("Static").obj1.equals(true)) return null;
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
+				double newAngle=(Double)Memory.get("Angle").obj1;
 				if (solve instanceof Double){
-					synchronized(Memory){
-						Memory.put("Angle", new Pair<Object,Boolean>(((((Double)solve)%(2*Math.PI))+2*Math.PI)%(2*Math.PI),true));
-					}
-					return null;
+					newAngle=((((Double)solve)%MathUtil.Pi2)+MathUtil.Pi2)%MathUtil.Pi2;
 				}else if (solve instanceof Vector2D){
+					newAngle=((Vector2D) solve).sub((Vector2D)Memory.get("Position").obj1).angle();
+				} else return new ErrorCode("Wrong variable type!");
+				
+				while (Math.abs((Double)Memory.get("Angle").obj1-newAngle)>0.015){
 					synchronized(Memory){
-						Memory.put("Angle", new Pair<Object,Boolean>(((Vector2D) solve).sub((Vector2D)Memory.get("Position").obj1).angle(),true));
+						double ang=(Double)Memory.get("Angle").obj1;
+						if (Math.abs(ang-newAngle)>Math.PI)
+						Memory.put("Angle", new Pair<Object,Boolean>((ang+0.01*Math.signum(ang-newAngle)+MathUtil.Pi2)%MathUtil.Pi2,true));
+						else Memory.put("Angle", new Pair<Object,Boolean>((ang-0.01*Math.signum(ang-newAngle)+MathUtil.Pi2)%MathUtil.Pi2,true));
 					}
-					return null;
+					try {
+						Thread.sleep(Factory.BotRotateDelay);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-				return new ErrorCode("Wrong variable type!");
+				
+				return null;
 			}
 			return new ErrorCode("Invalid 'turnto' statement!");
 		});
@@ -141,8 +152,17 @@ public final class SwarmCode {
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
-					synchronized(Memory){
-						Memory.put("Angle", new Pair<Object,Boolean>((((((Double)Memory.get("Angle").obj1)-((Double)solve))%(2*Math.PI))+2*Math.PI)%(2*Math.PI),true));
+					double newAngle=(((((Double)Memory.get("Angle").obj1)-((Double)solve))%MathUtil.Pi2)+MathUtil.Pi2)%MathUtil.Pi2;
+					while (Math.abs((Double)Memory.get("Angle").obj1-newAngle)>0.015){
+						synchronized(Memory){
+							double ang=(Double)Memory.get("Angle").obj1;
+							Memory.put("Angle", new Pair<Object,Boolean>((ang+0.01)%MathUtil.Pi2,true));
+						}
+						try {
+							Thread.sleep(Factory.BotRotateDelay);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 					return null;
 				}
@@ -156,8 +176,17 @@ public final class SwarmCode {
 			if (args.endsWith(")")){
 				Object solve=Pars.Solve(Pars.Parse(FindArrays(args.substring(0,args.length()-1))), Memory);
 				if (solve instanceof Double){
-					synchronized(Memory){
-						Memory.put("Angle", new Pair<Object,Boolean>((((((Double)Memory.get("Angle").obj1)+((Double)solve))%(2*Math.PI))+2*Math.PI)%(2*Math.PI),true));
+					double newAngle=((((Double)Memory.get("Angle").obj1)+((Double)solve))%MathUtil.Pi2);
+					while (Math.abs((Double)Memory.get("Angle").obj1-newAngle)>0.015){
+						synchronized(Memory){
+							double ang=(Double)Memory.get("Angle").obj1;
+							Memory.put("Angle", new Pair<Object,Boolean>((ang-0.01+MathUtil.Pi2)%MathUtil.Pi2,true));
+						}
+						try {
+							Thread.sleep(Factory.BotRotateDelay);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 					return null;
 				}
@@ -180,7 +209,7 @@ public final class SwarmCode {
 					Vector2D dir=new Vector2D(1,0).rotate(ang);
 					for (int i=0;i<(int)ile;++i){
 						try {
-							Thread.sleep(20);
+							Thread.sleep(Factory.BotMoveDelay);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -202,7 +231,7 @@ public final class SwarmCode {
 					}
 					
 					try {
-						Thread.sleep((long) (20*(ile-((int)ile))));
+						Thread.sleep((long) (Factory.BotMoveDelay*(ile-((int)ile))));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -243,7 +272,7 @@ public final class SwarmCode {
 					Vector2D dir=new Vector2D(1,0).rotate(ang);
 					for (int i=0;i<(int)ile;++i){
 						try {
-							Thread.sleep(20);
+							Thread.sleep(Factory.BotMoveDelay);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -265,7 +294,7 @@ public final class SwarmCode {
 					}
 					
 					try {
-						Thread.sleep((long) (20*(ile-((int)ile))));
+						Thread.sleep((long) (Factory.BotMoveDelay*(ile-((int)ile))));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
