@@ -132,7 +132,7 @@ public final class SwarmCode {
 				}
 				return new ErrorCode("Wrong variable type!");
 			}
-			return new ErrorCode("Invalid 'turnleft' statement!");
+			return new ErrorCode("Invalid 'turnto' statement!");
 		});
 		
 		CommandMap.put("turnleft(", (String args,Map<String, Pair<Object,Boolean>> Memory) ->{
