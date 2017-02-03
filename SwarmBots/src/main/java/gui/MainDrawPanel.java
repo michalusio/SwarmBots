@@ -12,6 +12,8 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -19,8 +21,12 @@ import javax.swing.JPanel;
 import botControl.Bot;
 import botControl.BotFactory;
 import botControl.BotType;
+import botControl.SwarmCode;
+import collisions.CollisionShape;
 import main.Main;
 import main.Vector2D;
+import sim.Obstacle;
+import sim.ObstacleBox;
 
 public class MainDrawPanel extends JPanel {
 	private static final long serialVersionUID = -3951099059163673209L;
@@ -29,6 +35,7 @@ public class MainDrawPanel extends JPanel {
 	public Bot selectedBot=null;
 	private final Camera Camera;
 	private Image BotImage,StationImage;
+	public static Image BoxImage;
 	private AffineTransform a;
 	private Vector2D inverted;
 	
@@ -41,8 +48,11 @@ public class MainDrawPanel extends JPanel {
 	
 	private GraphicPanel createPanel;
 	
+	private List<Obstacle> Obstacles;
+	
 	public MainDrawPanel(BotFactory bots){
 		super();
+		Obstacles=new ArrayList<Obstacle>();
 		Camera=new Camera(new Vector2D(0,0),new Vector2D(getWidth(),getHeight()),1);
 		Bots=bots;
 		
@@ -60,6 +70,15 @@ public class MainDrawPanel extends JPanel {
 			StationImage = ImageIO.read(url);
 		} catch (IOException e) {
 			StationImage=null;
+			e.printStackTrace();
+		}
+	    
+	    url = Main.class.getClassLoader().getResource("main/box.png");
+	    System.out.println("Loading box image: "+url.getPath());
+	    try {
+			BoxImage = ImageIO.read(url);
+		} catch (IOException e) {
+			BoxImage=null;
 			e.printStackTrace();
 		}
 	    
@@ -121,6 +140,14 @@ public class MainDrawPanel extends JPanel {
 			createPanel.Size=new Vector2D();
 			createPanel.Visible=false;
 	    }));
+	    createPanel.addComponent(new GraphicButton(new Vector2D(20,78),new Vector2D(64,48),"Box",()->{
+	    	selectedBot=null;
+			Obstacle ob=new ObstacleBox(inverted,new Vector2D(64,64));
+			Obstacles.add(ob);
+			SwarmCode.ColMap.addCollisionShape(ob.getShape());
+			createPanel.Size=new Vector2D();
+			createPanel.Visible=false;
+	    }));
 	}
 	
     @Override
@@ -157,7 +184,7 @@ public class MainDrawPanel extends JPanel {
         		gr.drawRect((int)p1.getX() -w1, (int)p1.getY() -w1, w2, w2);
         		updateBotDescription(gr,false);
         	}
-        	//6. Przesuniêcie ujemne o 32 pixele (wyœrodkowanie obrazka bota)
+        	//6. Przesuniêcie ujemne o 32 pixele (wyœrodkowanie obrazka bota) oraz half-pixel fix
         	a.concatenate(AffineTransform.getTranslateInstance(-32.5,-32.5));
         	Image Img;
         	switch(b.Type){
@@ -171,6 +198,14 @@ public class MainDrawPanel extends JPanel {
 				continue;
         	}
         	gr.drawImage(Img, a, null);
+        }
+        for(Obstacle ob: Obstacles){
+        	CollisionShape cs=ob.getShape();
+        	a=AffineTransform.getTranslateInstance(Camera.getHalfSize().X,Camera.getHalfSize().Y);
+        	a.concatenate(AffineTransform.getScaleInstance(Camera.getZoom(), Camera.getZoom()));
+        	a.concatenate(AffineTransform.getTranslateInstance(cs.BoundingBox.Location.X-Camera.getPosition().X, cs.BoundingBox.Location.Y-Camera.getPosition().Y));
+        	a.concatenate(AffineTransform.getTranslateInstance(-0.5,-0.5));
+        	gr.drawImage(ob.getImage(), a, null);
         }
         gr.setColor(Color.BLACK);
         gr.drawString("Free memory: " + String.format("%1$.2f",Runtime.getRuntime().freeMemory()/1048576.0d) +"Mb", getWidth()-140,12);
