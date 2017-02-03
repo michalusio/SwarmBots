@@ -72,6 +72,7 @@ public final class Vector2D {
 	}
 	
 	public final Vector2D rotate(double angle){
+		angle=-angle;
 		double Sin=Math.sin(angle);
 		double Cos=Math.cos(angle);
 		return new Vector2D(X*Cos-Y*Sin,X*Sin+Y*Cos);

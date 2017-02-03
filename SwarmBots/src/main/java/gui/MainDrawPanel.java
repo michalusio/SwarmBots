@@ -158,7 +158,7 @@ public class MainDrawPanel extends JPanel {
         		updateBotDescription(gr,false);
         	}
         	//6. Przesuniêcie ujemne o 32 pixele (wyœrodkowanie obrazka bota)
-        	a.concatenate(AffineTransform.getTranslateInstance(-32,-32));
+        	a.concatenate(AffineTransform.getTranslateInstance(-32.5,-32.5));
         	Image Img;
         	switch(b.Type){
 			case Basic:

@@ -1,5 +1,7 @@
 package collisions;
 
+import java.util.List;
+
 import main.Vector2D;
 
 public abstract class CollisionShape {
@@ -16,4 +18,6 @@ public abstract class CollisionShape {
 	protected abstract boolean getPreciseCollision(Vector2D point);
 
 	public abstract void translateTo(Vector2D newPos);
+
+	public abstract List<Vector2D> getPointMap();
 }

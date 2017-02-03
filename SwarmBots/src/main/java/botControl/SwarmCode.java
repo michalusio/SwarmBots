@@ -214,19 +214,14 @@ public final class SwarmCode {
 							e.printStackTrace();
 						}
 						Vector2D newPos=((Vector2D)Memory.get("Position").obj1).add(dir);
-						if (ColMap!=null) {
-							ColMap.deleteCollisionShape(cs);
-						}
-						if (ColMap==null||!ColMap.getCollision(newPos)){
-								Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
-							if (ColMap!=null){
-								cs.translateTo(newPos);
-								ColMap.addCollisionShape(cs);
-							}
+						if (ColMap!=null) cs.translateTo(newPos);
+						if (ColMap==null||!ColMap.getCollision(cs)){
+							Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
 							Memory.put("MoveError", new Pair<Object,Boolean>((double)0,false));
 						}else{
-							if (ColMap!=null) ColMap.addCollisionShape(cs);
+							cs.translateTo((Vector2D)Memory.get("Position").obj1);
 							Memory.put("MoveError", new Pair<Object,Boolean>((double)1,false));
+							return null;
 						}
 					}
 					
@@ -236,21 +231,14 @@ public final class SwarmCode {
 						e.printStackTrace();
 					}
 					Vector2D newPos=((Vector2D)Memory.get("Position").obj1).add(dir.mul(ile-((int)ile)));
-					if (ColMap!=null) {
-						ColMap.deleteCollisionShape(cs);
-					}
-					if (ColMap==null||!ColMap.getCollision(newPos)){
-							Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
-						if (ColMap!=null){
-							cs.translateTo(newPos);
-							ColMap.addCollisionShape(cs);
-						}
+					if (ColMap!=null) cs.translateTo(newPos);
+					if (ColMap==null||!ColMap.getCollision(cs)){
+						Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
 						Memory.put("MoveError", new Pair<Object,Boolean>((double)0,false));
 					}else{
-						if (ColMap!=null) ColMap.addCollisionShape(cs);
+						cs.translateTo((Vector2D)Memory.get("Position").obj1);
 						Memory.put("MoveError", new Pair<Object,Boolean>((double)1,false));
 					}
-					
 					return null;
 				}
 				return new ErrorCode("Wrong variable type!");
@@ -269,27 +257,22 @@ public final class SwarmCode {
 					}
 					double ile=(Double) solve;
 					CollisionShape cs=(CollisionShape)Memory.get("Shape").obj1;
-					Vector2D dir=new Vector2D(1,0).rotate(ang);
+					Vector2D dir=new Vector2D(1,0).rotate(ang+Math.PI);
 					for (int i=0;i<(int)ile;++i){
 						try {
 							Thread.sleep(Factory.BotMoveDelay);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						Vector2D newPos=((Vector2D)Memory.get("Position").obj1).sub(dir);
-						if (ColMap!=null) {
-							ColMap.deleteCollisionShape(cs);
-						}
-						if (ColMap==null||!ColMap.getCollision(newPos)){
-								Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
-							if (ColMap!=null){
-								cs.translateTo(newPos);
-								ColMap.addCollisionShape(cs);
-							}
+						Vector2D newPos=((Vector2D)Memory.get("Position").obj1).add(dir);
+						if (ColMap!=null) cs.translateTo(newPos);
+						if (ColMap==null||!ColMap.getCollision(cs)){
+							Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
 							Memory.put("MoveError", new Pair<Object,Boolean>((double)0,false));
 						}else{
-							if (ColMap!=null) ColMap.addCollisionShape(cs);
+							if (ColMap!=null) cs.translateTo((Vector2D)Memory.get("Position").obj1);
 							Memory.put("MoveError", new Pair<Object,Boolean>((double)1,false));
+							return null;
 						}
 					}
 					
@@ -298,22 +281,15 @@ public final class SwarmCode {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					Vector2D newPos=((Vector2D)Memory.get("Position").obj1).sub(dir.mul(ile-((int)ile)));
-					if (ColMap!=null) {
-						ColMap.deleteCollisionShape(cs);
-					}
-					if (ColMap==null||!ColMap.getCollision(newPos)){
-							Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
-						if (ColMap!=null){
-							cs.translateTo(newPos);
-							ColMap.addCollisionShape(cs);
-						}
+					Vector2D newPos=((Vector2D)Memory.get("Position").obj1).add(dir.mul(ile-((int)ile)));
+					if (ColMap!=null) cs.translateTo(newPos);
+					if (ColMap==null||!ColMap.getCollision(cs)){
+						Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
 						Memory.put("MoveError", new Pair<Object,Boolean>((double)0,false));
 					}else{
-						if (ColMap!=null) ColMap.addCollisionShape(cs);
+						if (ColMap!=null) cs.translateTo((Vector2D)Memory.get("Position").obj1);
 						Memory.put("MoveError", new Pair<Object,Boolean>((double)1,false));
 					}
-					
 					return null;
 				}
 				return new ErrorCode("Wrong variable type!");

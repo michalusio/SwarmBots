@@ -32,10 +32,10 @@ public abstract class Bot {
 		Creator=factory;
 		ID=id;
 		Memory=new HashMap<String,Pair<Object,Boolean>>();
-		Memory.put("Position", new Pair<Object,Boolean>(new Vector2D(0),true));
+		Memory.put("Position", new Pair<Object,Boolean>(new Vector2D(),true));
 		Memory.put("Angle", new Pair<Object,Boolean>(0.0d,true));
-		Disc sh=new Disc(new AABB(new Vector2D(0,0),new Vector2D(32,32)));
-		sh.translateTo(new Vector2D(0));
+		Disc sh=new Disc(new AABB(new Vector2D(),new Vector2D(64)));
+		sh.translateTo(new Vector2D());
 		Memory.put("Shape", new Pair<Object,Boolean>(sh,true));
 		Memory.put("Static", new Pair<Object,Boolean>(false,true));
 		Restart();
@@ -185,13 +185,7 @@ public abstract class Bot {
 
 	public void setPosition(Vector2D newPos) {
 		CollisionShape cs=(CollisionShape)Memory.get("Shape").obj1;
-		if (SwarmCode.ColMap!=null){
-			SwarmCode.ColMap.deleteCollisionShape(cs);
-		}
 		Memory.put("Position", new Pair<Object,Boolean>(newPos,true));
 		cs.translateTo(newPos);
-		if (SwarmCode.ColMap!=null){
-			SwarmCode.ColMap.addCollisionShape(cs);
-		}
 	}
 }
