@@ -12,7 +12,7 @@ import botControl.SwarmCode;
 import main.Vector2D;
 
 import java.awt.Rectangle;
-
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelListener;
@@ -20,8 +20,12 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
@@ -107,6 +111,20 @@ public final class MainWindow extends JFrame {
 		Factorypanel.setLayout(null);
 		
 		textArea = new JTextArea();
+		Action bracket = new AbstractAction()
+		{
+			@Override
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        String s=textArea.getText();
+		        int prevCaretPos=textArea.getCaretPosition();
+		        textArea.setText(s.substring(0, textArea.getCaretPosition())+"{}"+s.substring(textArea.getCaretPosition()));
+		        textArea.setCaretPosition(prevCaretPos+1);
+		    }
+		};
+		textArea.getInputMap().put(KeyStroke.getKeyStroke('{'), "Brackets");
+		textArea.getActionMap().put("Brackets",bracket);
+		textArea.setTabSize(1);
 		JScrollPane sp = new JScrollPane(textArea);
 		sp.setBounds(3,3,285,400);
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
