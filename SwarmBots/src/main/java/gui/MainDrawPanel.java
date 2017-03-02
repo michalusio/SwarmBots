@@ -154,7 +154,7 @@ public class MainDrawPanel extends JPanel {
 	public void paintComponent(Graphics g) {
         super.paintComponent(g); 
         Graphics2D gr = (Graphics2D) g;
-        gr.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        gr.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         gr.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
         gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         gr.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,RenderingHints.VALUE_STROKE_NORMALIZE);
@@ -211,7 +211,6 @@ public class MainDrawPanel extends JPanel {
         gr.drawString("Free memory: " + String.format("%1$.2f",Runtime.getRuntime().freeMemory()/1048576.0d) +"Mb", getWidth()-140,12);
         botPanel.drawComponent(gr);
         createPanel.drawComponent(gr);
-        gr.drawRect(getWidth()/2, getHeight()/2, 1,1);
     }
 
     @Override

@@ -104,9 +104,8 @@ public final class MainWindow extends JFrame {
 		});
 		
 		Factorypanel = new JPanel();
-		Factorypanel.setVisible(false);
 		Factorypanel.setBackground(UIManager.getColor("Panel.background"));
-		Factorypanel.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		Factorypanel.setBorder(new LineBorder(Color.BLACK, 2, false));
 		Factorypanel.setBounds(0, 0, 291, 433);
 		contentPane.add(Factorypanel);
 		Factorypanel.setLayout(null);
