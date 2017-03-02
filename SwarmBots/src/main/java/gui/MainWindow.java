@@ -93,7 +93,7 @@ public final class MainWindow extends JFrame {
 		canvas = new MainDrawPanel(bots);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent arg0) {
 				contentPane.grabFocus();
 				try {
 					canvas.clickMouse(new Vector2D(arg0.getX(),arg0.getY()),arg0.getButton()==MouseEvent.BUTTON1);
@@ -104,6 +104,7 @@ public final class MainWindow extends JFrame {
 		});
 		
 		Factorypanel = new JPanel();
+		Factorypanel.setVisible(false);
 		Factorypanel.setBackground(UIManager.getColor("Panel.background"));
 		Factorypanel.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 		Factorypanel.setBounds(0, 0, 291, 433);
@@ -113,6 +114,11 @@ public final class MainWindow extends JFrame {
 		textArea = new JTextArea();
 		Action bracket = new AbstractAction()
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3887308316342199824L;
+
 			@Override
 		    public void actionPerformed(ActionEvent e)
 		    {
@@ -167,7 +173,7 @@ public final class MainWindow extends JFrame {
              while(true) {
             	 Refresh();
             	 try {
-					Thread.sleep(33);
+					Thread.sleep(20);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

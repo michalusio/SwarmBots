@@ -32,7 +32,7 @@ public class MainDrawPanel extends JPanel {
 	private static final long serialVersionUID = -3951099059163673209L;
 
 	public final BotFactory Bots;
-	public Bot selectedBot=null;
+	public Bot selectedBot;
 	private final Camera Camera;
 	private Image BotImage,StationImage;
 	public static Image BoxImage;
@@ -55,7 +55,7 @@ public class MainDrawPanel extends JPanel {
 		Obstacles=new ArrayList<Obstacle>();
 		Camera=new Camera(new Vector2D(0,0),new Vector2D(getWidth(),getHeight()),1);
 		Bots=bots;
-		
+		selectedBot=null;
 	    URL url = Main.class.getClassLoader().getResource("main/bot.png");
 	    System.out.println("Loading bot image: "+url.getPath());
 	    try {
@@ -172,7 +172,7 @@ public class MainDrawPanel extends JPanel {
         	//3. Przesuniêcie o pozycjê bota (po³¹czone z 2.)
         	//4. Skalowanie o zoom kamery
         	//5. Przesuniêcie o pó³ ekranu (na wyœrodkowanie)
-        	a=AffineTransform.getTranslateInstance(Camera.getHalfSize().X,Camera.getHalfSize().Y);
+        	a=AffineTransform.getTranslateInstance(Camera.getSize().X,Camera.getSize().Y);
         	a.concatenate(AffineTransform.getScaleInstance(Camera.getZoom(), Camera.getZoom()));
         	a.concatenate(AffineTransform.getTranslateInstance(b.getPosition().X-Camera.getPosition().X, b.getPosition().Y-Camera.getPosition().Y));
         	a.concatenate(AffineTransform.getRotateInstance(-b.getAngle()));
@@ -201,7 +201,7 @@ public class MainDrawPanel extends JPanel {
         }
         for(Obstacle ob: Obstacles){
         	CollisionShape cs=ob.getShape();
-        	a=AffineTransform.getTranslateInstance(Camera.getHalfSize().X,Camera.getHalfSize().Y);
+        	a=AffineTransform.getTranslateInstance(Camera.getSize().X,Camera.getSize().Y);
         	a.concatenate(AffineTransform.getScaleInstance(Camera.getZoom(), Camera.getZoom()));
         	a.concatenate(AffineTransform.getTranslateInstance(cs.BoundingBox.Location.X-Camera.getPosition().X, cs.BoundingBox.Location.Y-Camera.getPosition().Y));
         	a.concatenate(AffineTransform.getTranslateInstance(-0.5,-0.5));
@@ -211,6 +211,7 @@ public class MainDrawPanel extends JPanel {
         gr.drawString("Free memory: " + String.format("%1$.2f",Runtime.getRuntime().freeMemory()/1048576.0d) +"Mb", getWidth()-140,12);
         botPanel.drawComponent(gr);
         createPanel.drawComponent(gr);
+        gr.drawRect(getWidth()/2, getHeight()/2, 1,1);
     }
 
     @Override
@@ -231,7 +232,7 @@ public class MainDrawPanel extends JPanel {
 		if ((!botPanel.onMouseClick(mPos))&&(!createPanel.onMouseClick(mPos))){
 			AffineTransform invert=AffineTransform.getTranslateInstance(Camera.getPosition().X, Camera.getPosition().Y);
 			invert.concatenate(AffineTransform.getScaleInstance(1/Camera.getZoom(), 1/Camera.getZoom()));
-			invert.concatenate(AffineTransform.getTranslateInstance(-Camera.getHalfSize().X,-Camera.getHalfSize().Y));
+			invert.concatenate(AffineTransform.getTranslateInstance(-Camera.getSize().X,-Camera.getSize().Y));
 			inverted=Vector2D.fromPoint2D(invert.transform(new Point2D.Double(mPos.X,mPos.Y),null));
 			createPanel.Size=new Vector2D();
 			createPanel.Visible=false;
